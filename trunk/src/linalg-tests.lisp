@@ -6,7 +6,21 @@
 (defpackage :linalg-tests
   (:use :cl :linalg :lisp-unit))
 
+
+;;; Force the export of the symbols matrix-(rows|cols|data) which are neccessary
+;;; for the execution of the tests.
+(in-package :linalg)
+
+(export '(matrix-rows matrix-cols matrix-data))
+
+
 (in-package :linalg-tests)
+
+
+(defun matrix= (a b)
+  (and (= (matrix-rows a) (matrix-rows b))
+       (= (matrix-cols a) (matrix-cols b))
+       (equalp (matrix-data a) (matrix-data b))))
 
 
 ;;; Some constant matrices that will be used throughout the tests
@@ -161,3 +175,10 @@
                     (normalized
                      (make-vector 10
                                   :generator #'(lambda (k) (random 100.0))))))))
+
+
+;;; Dot-product
+(define-test dot-product
+    (assert-equal 14.0
+                  (dot (make-vector 3 :data #(1.0 2.0 3.0))
+                       (make-vector 3 :data #(1.0 2.0 3.0)))))
