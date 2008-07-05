@@ -8,7 +8,8 @@
   (:export #:camera
            #:camera-pos
            #:camera-direction
-           #:camera-fov))
+           #:camera-fov
+           #:world->view))
 
 
 (in-package #:clrt-camera)
@@ -36,7 +37,7 @@
     :reader camera-fov)
    (w2v-matrix
     :type matrix
-    :accessor w2v-matrix)))
+    :reader w2v-matrix)))
 
 
 (defmethod initialize-instance :after ((cam camera) &key look-at)
@@ -44,27 +45,27 @@
         (normalized (m- look-at (camera-pos cam)))))
 
 
-(defgeneric world->view (op1 op2))
+(defmethod w2v-matrix :before ((cam camera))
+  (unless (slot-boundp cam 'w2v-matrix)
+    (let* ((right (normalized (cross (camera-up cam) (camera-direction cam))))
+           (up (normalized (cross (camera-direction cam) right)))
+           (dir (camera-direction cam)))
+      (setf (w2v-matrix cam)
+            (make-instance 'matrix
+                           :rows 3
+                           :cols 3
+                           :data (make-array 9
+                                             :element-type 'single-float
+                                             :initial-contents (vector (vec-x right)
+                                                                       (vec-y right)
+                                                                       (vec-z right)
+                                                                       (vec-x up)
+                                                                       (vec-y up)
+                                                                       (vec-z up)
+                                                                       (vec-x dir)
+                                                                       (vec-y dir)
+                                                                       (vec-z dir))))))))
 
-(defmethod world->view ((cam camera) (vec matrix))
-  (if (slot-boundp cam 'w2v-matrix)
-      (m* (w2v-matrix cam) vec)
-      (let* ((right (normalized (cross (camera-up cam) (camera-direction cam))))
-             (up (normalized (cross right (camera-direction cam))))
-             (dir (camera-direction cam)))
-        (setf (w2v-matrix cam)
-              (make-instance 'matrix
-                             :rows 3
-                             :cols 3
-                             :data (make-array 9
-                                               :element-type 'single-float
-                                               :initial-contents (vector (vec-x right)
-                                                                         (vec-y right)
-                                                                         (vec-z right)
-                                                                         (vec-x up)
-                                                                         (vec-y up)
-                                                                         (vec-z up)
-                                                                         (vec-x dir)
-                                                                         (vec-y dir)
-                                                                         (vec-z dir)))))
-        (m* (w2v-matrix cam) vec))))
+
+(defun world->view (cam vec)
+  (m* (w2v-matrix cam) vec))
