@@ -50,7 +50,7 @@
     (let* ((right (normalized (cross (camera-up cam) (camera-direction cam))))
            (up (normalized (cross (camera-direction cam) right)))
            (dir (camera-direction cam)))
-      (setf (w2v-matrix cam)
+      (setf (slot-value cam 'w2v-matrix)
             (make-instance 'matrix
                            :rows 3
                            :cols 3
@@ -68,4 +68,4 @@
 
 
 (defun world->view (cam vec)
-  (m* (w2v-matrix cam) vec))
+  (m* (w2v-matrix cam) (m- vec (camera-pos cam))))

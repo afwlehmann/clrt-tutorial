@@ -33,4 +33,7 @@
                              :lower-bound lower-bound
                              :upper-bound shadow-feeler)))
     (when tmin
-      (list tmin sphere (point-on-ray ray tmin)))))
+      (let ((ip (point-on-ray ray tmin)))
+        (list tmin sphere ip 
+            nil nil ;; TODO
+            (normalized (m- ip c)))))))
