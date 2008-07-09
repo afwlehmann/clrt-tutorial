@@ -142,7 +142,7 @@
 
 
 (defmethod m* ((a single-float) (b single-float))
-  (+ a b))
+  (* a b))
 
 
 (defun mult (&rest operands)

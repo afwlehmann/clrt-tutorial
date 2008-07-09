@@ -122,6 +122,11 @@
                                             2.5 3.0 3.5 4.0))))
 
 
+;;; Multiplication of two scalar values
+(define-test scalar-scalar-multiplication
+    (assert-equal (m* 1.5 2.0) 3.0))
+
+
 ;;; Transpose of a matrix
 (define-test matrix-transpose
     (assert-equality #'matrix=

@@ -62,9 +62,9 @@
 
 
 (defmethod finalize ((cube cube) (cam camera))
-  (dolist (ep '(fll flr fur ful bll blr bur bul))
-    (setf (slot-value cube ep)
-          (world->view cam (slot-value cube ep))))
+  (dolist (edge '(fll flr fur ful bll blr bur bul))
+    (setf (slot-value cube edge)
+          (world->view cam (slot-value cube edge))))
   (macrolet ((prep-face (face-name lower-left upper-left lower-right)
                (let ((up (gensym))
                      (right (gensym))

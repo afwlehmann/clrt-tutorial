@@ -13,9 +13,10 @@
            #:diffuse-coeff
            #:specular-coeff
            #:roughness))
-
+        
 
 (in-package #:clrt-material)
+
 
 
 (defclass material ()
@@ -26,7 +27,9 @@
     :reader ambient-color)
    (diffuse-color
     :initarg :diffuse-color
-    :initform (make-vector 3 :data #(1.0 1.0 1.0))
+    :initform (make-vector 3 :data (make-array 3
+                                               :element-type 'single-float
+                                               :initial-element 1.0))
     :type matrix
     :reader diffuse-color)
    (specular-color
@@ -50,8 +53,8 @@
     :type (real 0.0 1.0)
     :reader specular-coeff)
    (roughness
-    :initarg :specular-coeff
-    :initform 0
+    :initarg :roughness
+    :initform 50
     :type (integer 0)
     :reader roughness)))
 
@@ -60,4 +63,4 @@
   (assert (= (+ (ambient-coeff mat) (diffuse-coeff mat) (specular-coeff mat))
              1.0)
           nil
-          ":ambient-coeff, :diffuse-coeff and :specular-coeff must add up to 1.0."))
+          ":ambient-coeff, :diffuse-coeff and :specular-coeff must sum up to 1.0."))

@@ -24,8 +24,8 @@
     :reader object-center)
    (material
     :initarg :material
-    :type material
     :initform (error ":material must be specified.")
+    :type material
     :reader object-material)))
 
 
